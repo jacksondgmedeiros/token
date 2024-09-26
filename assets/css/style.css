@@ -1,0 +1,14 @@
+
+img{
+    width: 300px;
+}
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+/* O container principal ocupa toda a altura e usa flexbox */
+.main-container {
+    height: 100%;
+    
+}

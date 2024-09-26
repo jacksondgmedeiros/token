@@ -21,13 +21,58 @@ async function fetchUsers() {
 
 
 
-// Chamar a função para buscar os dados
- fetchUsers();
+// Chamar a função para buscar os dados apenas na página inicial
 
-    document.getElementById('loginForm').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Evita o envio padrão do formulário
+if(window.location.pathname === './'){
 
-    // Captura os valores dos campos
+    fetchUsers();
+}
+
+
+ async function cadastrarUser(event){
+
+        
+        event.preventDefault(); // Evita o envio padrão do formulário
+
+        // Captura os valores dos campos
+        const login = document.getElementById('exampleInputEmail1').value;
+        const senha = document.getElementById('exampleInputPassword1').value;
+
+        // Cria o objeto com os dados a serem enviados
+        const data = {
+            login: login,
+            senha: senha
+        };
+
+        try {
+            const response = await fetch(baseURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao enviar os dados');
+            }
+
+            // Verifica se a resposta tem conteúdo antes de tentar convertê-la em JSON
+            const text = await response.text();
+            const result = text ? JSON.parse(text) : {};
+            console.log('Sucesso:', result);
+        } catch (error) {
+            console.error('Erro:', error);
+        }
+ }
+
+
+
+ // Função para realizar o login
+async function realizarLogin(event) {
+    event.preventDefault(); // Previne o envio padrão do formulário
+
+    // Captura os valores de login e senha
     const login = document.getElementById('exampleInputEmail1').value;
     const senha = document.getElementById('exampleInputPassword1').value;
 
@@ -38,7 +83,8 @@ async function fetchUsers() {
     };
 
     try {
-        const response = await fetch('http://localhost:8080/login', {
+        // Faz a requisição para o endpoint
+        const response = await fetch(baseURL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -46,18 +92,31 @@ async function fetchUsers() {
             body: JSON.stringify(data)
         });
 
+        // Se a resposta não for OK, dispara um erro
         if (!response.ok) {
-            throw new Error('Erro ao enviar os dados');
+            throw new Error('Erro ao fazer login');
         }
 
-        // Verifica se a resposta tem conteúdo antes de tentar convertê-la em JSON
-        const text = await response.text();
-        const result = text ? JSON.parse(text) : {};
-        console.log('Sucesso:', result);
+        // Converte a resposta para JSON
+        const result = await response.json();
+
+        // Supondo que o servidor retorna um campo "success" para verificar o login
+        if (result.success) {
+            // Se o login estiver correto, redireciona para a página de logado
+            window.location.href = 'logado.html';
+        } else {
+            // Exibe mensagem de erro se o login ou a senha estiverem errados
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.innerText = 'Usuário ou senha incorretos';
+            errorMessage.style.display = 'block';
+        }
     } catch (error) {
-        console.error('Erro:', error);
+        // Captura erros de conexão ou outras falhas
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.innerText = 'Erro ao fazer login. Tente novamente mais tarde.';
+        errorMessage.style.display = 'block';
     }
-});
+}
 
-
-
+// Adiciona um event listener ao botão de submit do formulário
+document.getElementById('loginForm').addEventListener('submit', realizarLogin);
