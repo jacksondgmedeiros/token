@@ -16,13 +16,50 @@
     <title>Token</title>
 </head>
 <body>
-
-    <div class="container main-container d-flex justify-content-center align-items-center">
-        <div class="row w-100">
-            <div class="col-md-6 text-center">
-                <img src="./assets/img/logo_login.png" alt="Logo" class="img-fluid mb-4">
+    <div class="container main-container d-flex align-items-center justify-content-center">
+        <div class="row d-flex flex-column flex-md-row">
+            <div class="col">
+                <img src="/assets/img/logoJJ.png" alt="" class="img-fluid d-md-none">
+                <img src="./assets/img/logoJJfundo.png" alt="" class="img-fluid d-md-block d-none rounded-5">
             </div>
-            <div class="col-md-6">
+            <div class="col form text-center">
+                <form id="loginForm"></form>
+                    <div class="mb-4">
+                        <label for="exampleInputEmail1" class="form-label">Digite seu e-mail:</label>
+                        <input type="email"  class="form-control border-0 border-bottom rounded-0 " id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-4">
+                        <label for="exampleInputPassword1" class="form-label">Digite sua senha:</label>
+                        <input type="password" class="form-control border-0 border-bottom rounded-0" id="exampleInputPassword1">
+                    </div>
+                    <div class="d-grid ">
+                        <button type="submit" class="btn btn-primary rounded-pill">Login</button>
+                    </div>
+                    <div class="m-4 ">
+                        <a href="./cadastrar.html">
+                            Não tem login? Cadastre-se
+                        </a>
+                    </div>
+                </form>
+            </div>
+            <div class="w-100"></div>
+            <div class="col text-center my-5">
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                      <p>Jackson Medeiros | 2024</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                      <cite title="Source Title">Desenvolvedor</cite>
+                    </figcaption>
+                  </figure>
+            </div>
+        </div>
+        <!-- <div class="row d-flex align-items-center justify-content-center">
+            <div class="col">
+                <img src="./assets/img/logoJJfundo.png" alt="" class="img-fluid text-center">
+            </div>
+            <div class="col">
+            
                 <form id="loginForm">
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Digite o seu e-mail:</label>
@@ -40,7 +77,7 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> -->
     </div>
     
 </body>

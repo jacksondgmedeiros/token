@@ -10,5 +10,5 @@ body, html {
 /* O container principal ocupa toda a altura e usa flexbox */
 .main-container {
     height: 100%;
-    
 }
+
