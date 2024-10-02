@@ -17,13 +17,17 @@
 </head>
 <body>
     <div class="container main-container d-flex align-items-center justify-content-center">
+
+        <div id="error-message">
+
+        </div>
         <div class="row d-flex flex-column flex-md-row">
             <div class="col">
                 <img src="/assets/img/logoJJ.png" alt="" class="img-fluid d-md-none">
                 <img src="./assets/img/logoJJfundo.png" alt="" class="img-fluid d-md-block d-none rounded-5">
             </div>
             <div class="col form text-center">
-                <form id="loginForm"></form>
+                <form id="loginForm" onsubmit="realizarLogin(event)">
                     <div class="mb-4">
                         <label for="exampleInputEmail1" class="form-label">Digite seu e-mail:</label>
                         <input type="email"  class="form-control border-0 border-bottom rounded-0 " id="exampleInputEmail1" aria-describedby="emailHelp">

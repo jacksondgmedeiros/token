@@ -83,8 +83,9 @@ async function realizarLogin(event) {
     };
 
     try {
+        var endPoint = baseURL + "/autenticar";
         // Faz a requisição para o endpoint
-        const response = await fetch(baseURL, {
+        const response = await fetch(endPoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -95,8 +96,10 @@ async function realizarLogin(event) {
         // Se a resposta não for OK, dispara um erro
         if (!response.ok) {
             throw new Error('Erro ao fazer login');
-        }
+            console.error("não fez login");
+        } 
 
+        
         // Converte a resposta para JSON
         const result = await response.json();
 
@@ -104,6 +107,7 @@ async function realizarLogin(event) {
         if (result.success) {
             // Se o login estiver correto, redireciona para a página de logado
             window.location.href = 'logado.html';
+            console.log('Logado no banco');
         } else {
             // Exibe mensagem de erro se o login ou a senha estiverem errados
             const errorMessage = document.getElementById('error-message');
@@ -120,3 +124,7 @@ async function realizarLogin(event) {
 
 // Adiciona um event listener ao botão de submit do formulário
 document.getElementById('loginForm').addEventListener('submit', realizarLogin);
+
+
+
+
