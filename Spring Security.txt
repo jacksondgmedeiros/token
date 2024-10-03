@@ -1,0 +1,50 @@
+Spring Security JAVA
+
+primeiro: 
+
+    adicionar a dependência spring Security, pode usar o spring.io para pegar ou o repository do maven
+    adicionei as duas, uma normal e a de teste
+
+    depois de adicionar, automaticamente é criado uma senha ao subir o projeto e você ficou bloqueado em tudo 
+
+    por padrão, ele já vem com um formulário criado, o usuário é user e a senha é a que foi gerada ao subir o projeto
+
+
+segundo: 
+    é necessário criar a entidade de login e senha, crie o seu código de acordo com a linguagem, usei no projeto token a entidade login
+    seu repository do JPA para consultas de sql
+
+terceiro:
+
+    por padrão, tem que criar uma classe que o spring já olha para ela referente ao processo de autenticação
+    no projeto criado, criei a classe AutenticacaoService, essa classe não precisar ser injetada, será vista diretamente, basta apenas colocar a anotação @Service
+
+
+quarto:
+    mostrar que não quer usar o conceito de sessão, tem que ser feito com uma classe via código JAVA
+    a configuração foi adicionada na classe SecurityConfigurations
+
+
+quinto
+    adicionando a chamada http, na página de login.
+
+    para acionar a auteticacaoService, a gente chama uma classa de Spring chamada AutehnticactionManager com o @Autowired
+
+    na classe de SecurityConfigurations foi necessário criar o método authenticationManager para dizer ao spring como injetar a autenticação
+
+    foi criado o método login com @PostMapping com o caminho /autenteticar
+    dentro do método usamos o authenticate(token) com o parametro passado pela variavel que token que inicializou uma nova instância do spring
+
+    
+
+
+
+
+
+
+
+
+
+
+
+

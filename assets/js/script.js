@@ -96,7 +96,7 @@ async function realizarLogin(event) {
         // Se a resposta não for OK, dispara um erro
         if (!response.ok) {
             throw new Error('Erro ao fazer login');
-            console.error("não fez login");
+            
         } 
 
         
@@ -108,23 +108,33 @@ async function realizarLogin(event) {
             // Se o login estiver correto, redireciona para a página de logado
             window.location.href = 'logado.html';
             console.log('Logado no banco');
+            
         } else {
             // Exibe mensagem de erro se o login ou a senha estiverem errados
             const errorMessage = document.getElementById('error-message');
             errorMessage.innerText = 'Usuário ou senha incorretos';
             errorMessage.style.display = 'block';
         }
+
+        
     } catch (error) {
         // Captura erros de conexão ou outras falhas
         const errorMessage = document.getElementById('error-message');
-        errorMessage.innerText = 'Erro ao fazer login. Tente novamente mais tarde.';
-        errorMessage.style.display = 'block';
+        // errorMessage.innerText = 'Erro ao fazer login. Tente novamente mais tarde.';
+        // errorMessage.style.display = 'block';
+        errorMessage.classList.remove('d-none');
+        // errorMessage.classList.add('d-block');
+        
     }
 }
 
 // Adiciona um event listener ao botão de submit do formulário
-document.getElementById('loginForm').addEventListener('submit', realizarLogin);
+if(window.location.pathname === './'){
+
+    document.getElementById('loginForm').addEventListener('submit', realizarLogin);
+}
 
 
-
-
+if(window.location.pathname === '/logado.html'){
+    fetchUsers();
+}
