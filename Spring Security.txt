@@ -35,8 +35,79 @@ quinto
     foi criado o método login com @PostMapping com o caminho /autenteticar
     dentro do método usamos o authenticate(token) com o parametro passado pela variavel que token que inicializou uma nova instância do spring
 
-    
+sexto
+    criei a classe DadosAutenticacao solicitada para passar os valores
 
+setimo
+    agora tem que responder com o token, para isso, usamos a biblioteca jwt.io jason web token
+    no site, clique em biblioteca e veja a biblioteca de Java, escolhemos o Auth0, clica no link do git para direcionar para ver como instalar 
+    cole a nova dependência no pom.xml
+
+oitavo
+    criei uma classe TokenServico para colocar os códigos da dependência, precisa da anotação @Service
+    criei um metodo de String para gerar token e copiei o códido de como criar o token
+
+    .withIssuer = é para colocar informações da sua chave, como por exemplo o nome do projeto, entre outros
+    .withSubject = quem é a pessoa ou o login
+    .withClaim = passa mais informações, como por exemplo o id, ele tem dois parametros
+    .withExpiresAt = para o prazo do token
+
+    depois, o método de validar o token 
+    .verifY(token) = para validar o token passado se está de acordo com o enviado
+    .getSubject = para pegar o usuário
+    
+nono
+    lá no controller deve ser chamada a classe criada na etapa anterior
+    e na resposta, dentro de ok(), passa o metodo gerador do token e faz um Cast da variavel authentication.getPrincipal()
+
+decimo
+    foi criado um novo dto para passando como parametro o tokenJWT, que nada mais é o código de Cast criado acima, com isso, o retorno fica mais
+    fáacil de entender pois vem como um jsons
+
+alterando a senha secreta gerada 
+passei uma variavel chamada secret criada como private e coloca a anotação @value do spring passando entre ("") o nome criado no application.properties
+lá no application.properties foi criado essa chave com o nome api.security.token.secreta=${JWT_SECRET:123456}
+como foi passado como variavel de ambiente, é necessário criar uma nova 
+no windows, crie a variavel, senão vai usar o que está depois de :
+
+    
+criando filters para alidar a usabilidade do tokenJWT, se poderá ou não ser acionado a requisição
+
+primeiro   
+    criando uma classe SecurityFilter e use uma anotação @Component, que diz que é uma classe generica, apenas para carregar automaticamente
+    extends OncePerRequestFilter, que é do spring e precisa implementar o método para que o spring chame
+    dentro do método, coloca o filterChain.doFilter(request, response) para informar que ele deve continuar o fluxo
+    caso queira interromper a próxima chamada, você não chama essa ação
+
+segundo 
+    o token terá que ser enviado pelo cabeçalho, então é necessário ser chamado no front, ou na requisição do insomia, eu auth, clica em Bearer TokenServico
+    cole o seu token na linha token
+
+terceiro
+    agora precisa pegar o token enviado, para isso, crie o metodo recuperarToken(HttpServletRequest request) e armazene em uma variavel o códico request.getHeader("Authorization)
+    valide com o if se recebe null e lance uma exception, senão retorne a variavel.replace("Bearer", "")
+    cheme a funcão recuperarToken numa variavel no metodo doFilterInternal
+
+    com o método criado de validar o token criado lá atrás, injete dentro dessa classe e no método doFilterInternal, armazene em uma variavel usando o .getSubject(token)
+
+quarto  
+    autenticando o usuário
+    como a nossa API é statless, ou seja, não fica logado, tem que checar se o usuário está ou não autenticada.
+
+    lá na etapa da criação da classe SecurityConfigurations, dentro do método SecurityFilterChain, é necessário adicionar mais ações
+
+    authorizeHttpRequests = para configurar as requisições de autorização e dentro de uma unção lambda
+    .requestMatchers("/login/autenticar").permitAll() = apenas essa url está liberada sem precisar autenticar
+    .anyRequest().authenticated() = informa que todas as urls precisam de autenticação, usa essa e a de cima por conta que precia liberar a de login
+    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) = o spring tem dois filtros, assim, a gente fala que o nosso tem que ser o primeiro
+
+    com essa adição no código, agora a validação não será mais feita no if, com isso, lá no método recuperarToken() do SecurityFilter, troque ele para
+    if(variavel != null){
+        código para retornar a variavel com o replace
+    } 
+    fora, coloca o return null;
+
+    no método doFilterInternal tem que colocar a variavel que pega o token dentro do mesmo if
 
 
 

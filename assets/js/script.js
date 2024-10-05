@@ -1,5 +1,5 @@
 const baseURL = 'http://localhost:8080/login';
-
+let token = '';
 async function fetchUsers() {
     try {
         const response = await fetch(baseURL);
@@ -14,9 +14,14 @@ async function fetchUsers() {
             userList.appendChild(listItem);
         });
         console.log(data);
+        
+        console.log("token do usuário", token);
+        
     } catch (error) {
         console.error('Erro:', error);
     }
+
+    
 }
 
 
@@ -102,6 +107,9 @@ async function realizarLogin(event) {
         
         // Converte a resposta para JSON
         const result = await response.json();
+        console.log("resposta", result);
+
+        let token = result.success;
 
         // Supondo que o servidor retorna um campo "success" para verificar o login
         if (result.success) {
