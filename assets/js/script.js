@@ -162,7 +162,8 @@ async function realizarLogin(event) {
         const response = await fetch(baseURL + '/autenticar', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': token // Inclua o token na requisição, caso esteja presente
             },
             body: JSON.stringify(data)
         });
