@@ -14,9 +14,9 @@ const baseURL = 'http://localhost:8080/login';
 //             userList.appendChild(listItem);
 //         });
 //         console.log(data);
-        
+
 //         console.log("token do usuário", token);
-        
+
 //     } catch (error) {
 //         console.error('Erro:', error);
 //     }    
@@ -32,42 +32,42 @@ const baseURL = 'http://localhost:8080/login';
 // }
 
 
- async function cadastrarUser(event){
+async function cadastrarUser(event) {
 
-        
-        event.preventDefault(); // Evita o envio padrão do formulário
 
-        // Captura os valores dos campos
-        const login = document.getElementById('exampleInputEmail1').value;
-        const senha = document.getElementById('exampleInputPassword1').value;
+    event.preventDefault(); // Evita o envio padrão do formulário
 
-        // Cria o objeto com os dados a serem enviados
-        const data = {
-            login: login,
-            senha: senha
-        };
+    // Captura os valores dos campos
+    const login = document.getElementById('exampleInputEmail1').value;
+    const senha = document.getElementById('exampleInputPassword1').value;
 
-        try {
-            const response = await fetch(baseURL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
+    // Cria o objeto com os dados a serem enviados
+    const data = {
+        login: login,
+        senha: senha
+    };
 
-            if (!response.ok) {
-                throw new Error('Erro ao enviar os dados');
-            }
+    try {
+        const response = await fetch(baseURL + '/cadastrar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
 
-            // Verifica se a resposta tem conteúdo antes de tentar convertê-la em JSON
-            const text = await response.text();
-            const result = text ? JSON.parse(text) : {};
-            console.log('Sucesso:', result);
-        } catch (error) {
-            console.error('Erro:', error);
+        if (!response.ok) {
+            throw new Error('Erro ao enviar os dados');
         }
- }
+
+        // Verifica se a resposta tem conteúdo antes de tentar convertê-la em JSON
+        const text = await response.text();
+        const result = text ? JSON.parse(text) : {};
+        console.log('Sucesso:', result);
+    } catch (error) {
+        console.error('Erro:', error);
+    }
+}
 
 
 
@@ -99,10 +99,10 @@ const baseURL = 'http://localhost:8080/login';
 //         // Se a resposta não for OK, dispara um erro
 //         if (!response.ok) {
 //             throw new Error('Erro ao fazer login');
-            
+
 //         } 
 
-        
+
 //         // Converte a resposta para JSON
 //         const result = await response.json();
 //         console.log("resposta", result);
@@ -114,7 +114,7 @@ const baseURL = 'http://localhost:8080/login';
 //             // Se o login estiver correto, redireciona para a página de logado
 //             window.location.href = 'logado.html';
 //             console.log('Logado no banco');
-            
+
 //         } else {
 //             // Exibe mensagem de erro se o login ou a senha estiverem errados
 //             const errorMessage = document.getElementById('error-message');
@@ -122,7 +122,7 @@ const baseURL = 'http://localhost:8080/login';
 //             errorMessage.style.display = 'block';
 //         }
 
-        
+
 //     } catch (error) {
 //         // Captura erros de conexão ou outras falhas
 //         const errorMessage = document.getElementById('error-message');
@@ -130,12 +130,12 @@ const baseURL = 'http://localhost:8080/login';
 //         // errorMessage.style.display = 'block';
 //         errorMessage.classList.remove('d-none');
 //         // errorMessage.classList.add('d-block');
-        
+
 //     }
 // }
 
 // Adiciona um event listener ao botão de submit do formulário
-if(window.location.pathname === './'){
+if (window.location.pathname === './') {
 
     document.getElementById('loginForm').addEventListener('submit', realizarLogin);
 }
@@ -163,10 +163,11 @@ async function realizarLogin(event) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': token // Inclua o token na requisição, caso esteja presente
+                // 'Authorization': token // Inclua o token na requisição, caso esteja presente
             },
             body: JSON.stringify(data)
         });
+
 
         if (!response.ok) {
             throw new Error('Erro ao fazer login');
@@ -175,16 +176,17 @@ async function realizarLogin(event) {
         const result = await response.json();
         console.log("resposta", result);
 
-        // Supondo que o servidor retorna um campo "token" no resultado
+        // o servidor retorna um campo "token" no resultado
         let token = result.success;
 
-        console.log(token)
         if (token) {
             // Armazenar o token para uso posterior
             localStorage.setItem('token', token);
 
+
             // Redirecionar para a página logada
             window.location.href = 'logado.html';
+
         } else {
             const errorMessage = document.getElementById('error-message');
             errorMessage.innerText = 'Usuário ou senha incorretos';
@@ -193,6 +195,7 @@ async function realizarLogin(event) {
     } catch (error) {
         const errorMessage = document.getElementById('error-message');
         errorMessage.classList.remove('d-none');
+        console.log("erro", error);
     }
 }
 
@@ -211,6 +214,9 @@ async function fetchUsers() {
             throw new Error('Erro ao buscar os dados');
         }
 
+
+      
+
         const data = await response.json();
         const userList = document.getElementById('userList');
         data.forEach(user => {
@@ -225,4 +231,45 @@ async function fetchUsers() {
 
 if (window.location.pathname === '/logado.html') {
     fetchUsers();
+
+      // Chame a função após o login, passando o token armazenado
+      const tokenSalvo = localStorage.getItem('token');
+      if (tokenSalvo) {
+        verificarExpiracaoToken(tokenSalvo);
+        console.log(tokenSalvo);
+      }
 }
+
+
+// Função para verificar e alertar sobre a expiração do token
+function verificarExpiracaoToken(token) {
+    const expirationTime = getTokenExpiration(token);
+
+    if (expirationTime) {
+        const currentTime = new Date().getTime();
+        const timeToExpiration = expirationTime - currentTime;
+
+        // Se o token expirar em menos de 30 segundos, exibe um alerta e redireciona
+        if (timeToExpiration <= 30000) {
+            alert('Seu token está prestes a expirar. Você será redirecionado para a página de login.');
+            window.location.href = 'index.html';
+        } else {
+            // Configura um temporizador para alertar 30 segundos antes de expirar
+            setTimeout(() => {
+                alert('Seu token está prestes a expirar. Você será redirecionado para a página de login.');
+                window.location.href = 'index.html';
+            }, timeToExpiration - 30000);
+        }
+    }
+}
+
+// Função para decodificar o token JWT e extrair a data de expiração
+function getTokenExpiration(token) {
+    const payloadBase64 = token.split('.')[1];
+    const decodedPayload = atob(payloadBase64);
+    const payload = JSON.parse(decodedPayload);
+    return payload.exp ? payload.exp * 1000 : null; // Multiplicamos por 1000 para obter em milissegundos
+}
+
+
+
